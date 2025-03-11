@@ -6,6 +6,7 @@ let reset_btn = document.getElementById("reset_quiz");
 let array = [];
 let index = 0;
 let score = 0;
+let count = 0;
 
 // Fetch quiz data from API
 async function fetchData() {
@@ -31,6 +32,7 @@ fetchData();
 start_btn.addEventListener("click", function () {
     document.getElementsByClassName("display")[0].style.visibility = "visible";
     document.getElementsByClassName("non_display")[0].style.visibility = "hidden";
+    document.getElementsByClassName("display")[1].style.visibility = "visible";
     
     display_question();
 });
@@ -45,14 +47,14 @@ function display_question() {
         endQuiz();
         return;
     }
-
+    updatecount();
     let q = array[index].question;
     let corr_opt = array[index].correct_answer;
     let incorr_opt = array[index].incorrect_answers;
 
     document.getElementById("quest").innerHTML = `<p>${q}</p>`;
 
-    // Randomly insert the correct answer into the incorrect options array
+    
     let no = Math.floor(Math.random() * 4);
     incorr_opt.splice(no, 0, corr_opt);
 
@@ -86,6 +88,8 @@ function display_question() {
 
 // Function to check answer
 function checkAnswer(selectedBtn, correctAnswer) {
+    clearTimeout(timer); 
+
     if (selectedBtn.innerText === correctAnswer) {
         selectedBtn.classList.add("correct");
         score++;
@@ -93,7 +97,6 @@ function checkAnswer(selectedBtn, correctAnswer) {
         selectedBtn.classList.add("incorrect");
     }
 
-    
     let allOptions = document.getElementById("options").getElementsByTagName("button");
     for (let btn of allOptions) {
         btn.disabled = true;
@@ -102,7 +105,7 @@ function checkAnswer(selectedBtn, correctAnswer) {
         }
     }
 
-    // Wait for .5 second before moving to the next question
+    
     setTimeout(nextQuestion, 500);
 }
 
@@ -111,9 +114,13 @@ function checkAnswer(selectedBtn, correctAnswer) {
 
 
 
+
 // Function to move to next question
 function nextQuestion() {
+    clearTimeout(timer); 
     index++;
+    count=0;
+    
     console.log(`Moving to question index: ${index}`);
 
     if (index < array.length) {
@@ -133,6 +140,9 @@ function endQuiz() {
 
     next_btn.classList.add("hide");
     reset_btn.classList.remove("hide");
+    document.getElementById("counter").style.visibility = "hidden";
+
+    
 }
 
 
@@ -142,12 +152,15 @@ function endQuiz() {
 
 // Function to reset the quiz
 function resetQuiz() {
+    clearTimeout(timer); 
     index = 0;
     score = 0;
+    count = 0;
     console.log("Quiz Reset");
 
     fetchData(); 
     document.getElementsByClassName("display")[0].style.visibility = "hidden";
+    document.getElementsByClassName("display")[1].style.visibility = "hidden";
     document.getElementsByClassName("non_display")[0].style.visibility = "visible";
     reset_btn.classList.add("hide");
 }
@@ -162,6 +175,22 @@ next_btn.addEventListener("click", function () {
 
 
 
+
+
+//checking for the counter 
+function updatecount() {
+    timer = setTimeout(() => {
+        count++;
+        console.log(count);
+        document.getElementById("counter").innerText = `Timer: ${count}`;
+        
+        if (count >= 10) {
+            nextQuestion();
+        } else {
+            updatecount();
+        }
+    }, 1000);
+}
 
 
 

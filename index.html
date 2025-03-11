@@ -9,11 +9,22 @@
 <body>
 
     <div class="quiz-container">
-        <h1>Quiz App</h1>
+        <div class="box_container">
+            <div>
+                <h1>Quiz App</h1>
+            </div>
+            <div id="counter"  class="display" style="visibility: hidden;">
+                <p>Timer:0</p>
+            </div>
+            
+        </div>
+        
 
-        <div class="non_display">
+        <div id="start_msg"  class="non_display">
+            
             <p>Click the button to start the quiz!</p>
             <button id="start_quiz" class="btn">Start Quiz</button>
+            
         </div>
 
         <div class="display" style="visibility: hidden;">
